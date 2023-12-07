@@ -4,7 +4,7 @@
 </p>
 <br/>
 <p>
-   Framework: Nestjs
+  Framework: Nestjs<br/>
   Database: MySQL, Prisma
 </p>
 
