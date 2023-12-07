@@ -59,7 +59,7 @@ export class OrderService {
       }
     })
   }
-  getDatail(billId: number) {
+  getDetail(billId: number) {
     return this.prismaService.bill.findUnique({
       where: {
         id: billId
