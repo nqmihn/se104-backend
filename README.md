@@ -10,7 +10,7 @@
 
 
 ## Installation
-
+Go to the [Backend Folder](./se104-api) then run:
 ```bash
 npm install
 ```
