@@ -4,8 +4,10 @@
 </p>
 <br/>
 <p>
-  Framework: Nestjs<br/>
-  Database: MySQL, Prisma
+  Framework: Nestjs
+</p>
+<p>
+    Database: MySQL, Prisma
 </p>
 
 
