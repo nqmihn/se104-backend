@@ -20,7 +20,7 @@ export class OrderController {
   }
   @Get('detail/:billId')
   getBillDetail(@Param('billId') billId: string) {
-    return this.orderService.getDatail(+billId)
+    return this.orderService.getDetail(+billId)
   }
   @Get()
   findAll() {
