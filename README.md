@@ -1,9 +1,12 @@
 <p align="center">
   Api For Web E-commerce Management
-  Framework: Nestjs
+ 
+</p>
+<br/>
+<p>
+   Framework: Nestjs
   Database: MySQL, Prisma
 </p>
-
 
 
 ## Installation
