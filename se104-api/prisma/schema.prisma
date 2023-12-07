@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  SELLER
+  SHIPPER
+}
+
+model User {
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  password       String
+  name           String
+  phoneNumber    String
+  birth          DateTime?
+  address        String?
+  role           Role?            @default(USER)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  shop           Shop?
+  bill           Bill[]
+  deliveryDetail DeliveryDetail[]
+  refund         Refund[]
+}
+
+model Shop {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  phoneNumber String
+  address     String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int           @unique
+  product     Product[]
+  shopVoucher ShopVoucher[]
+}
+
+model Factory {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  country   String
+  product   Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model TypeProduct {
+  id        Int       @id @default(autoincrement())
+  name      String
+  product   Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  name        String
+  price       Int
+  description String
+  factory     Factory      @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+  factoryId   Int
+  shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId      Int
+  typeProduct TypeProduct  @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  typeId      Int
+  quantity    Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetail  BillDetail[]
+}
+
+model Delivery {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  price           Int
+  deliveryVoucher DeliveryVoucher[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  bill            Bill[]
+}
+
+model DeliveryVoucher {
+  id          Int      @id @default(autoincrement())
+  description String
+  discount    Int
+  delivery    Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  expireIn    DateTime
+  deliveryId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bill        Bill[]
+}
+
+model ShopVoucher {
+  id          Int          @id @default(autoincrement())
+  description String
+  discount    Int
+  expireIn    DateTime
+  shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId      Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetail  BillDetail[]
+}
+
+enum Status {
+  PENDING
+  CANCELED
+  SHIPPING
+  COMPLETE
+}
+
+model Bill {
+  id                Int              @id @default(autoincrement())
+  productPrice      Float
+  deliveryPrice     Int
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            Int
+  address           String
+  phoneNumber       String
+  status            Status
+  billDetail        BillDetail[]
+  DeliveryVoucher   DeliveryVoucher? @relation(fields: [deliveryVoucherId], references: [id])
+  deliveryVoucherId Int?
+  totalPrice        Int
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  delivery          Delivery         @relation(fields: [deliveryId], references: [id])
+  deliveryId        Int
+  deliveryDetail    DeliveryDetail?
+  refund            Refund[]
+}
+
+model BillDetail {
+  id            Int          @default(autoincrement())
+  bill          Bill         @relation(fields: [billId], references: [id], onDelete: Cascade)
+  billId        Int
+  product       Product      @relation(fields: [productId], references: [id])
+  productId     Int
+  ShopVoucher   ShopVoucher? @relation(fields: [shopVoucherId], references: [id])
+  shopVoucherId Int?
+  quantity      Int
+  price         Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@id([id, billId])
+}
+
+model DeliveryDetail {
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  bill       Bill     @relation(fields: [billId], references: [id], onDelete: Cascade)
+  billId     Int      @unique
+  expectDate DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId, billId])
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+}
+
+model Refund {
+  id          Int          @id @default(autoincrement())
+  User        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  Bill        Bill         @relation(fields: [billId], references: [id], onDelete: Cascade)
+  billId      Int
+  description String
+  status      RefundStatus
+  response    String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
