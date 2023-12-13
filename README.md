@@ -26,7 +26,7 @@ docker compose -f mysql.yml -p db-se104 up -d
 ```
 
 <b>Step 2: </b>
-Go to the [Backend Folder] (./se104-api) then run:
+Go to the [Backend Folder](./se104-api) then run:
 
 ```bash
 npx prisma migrate dev
