@@ -48,6 +48,9 @@ export class UserService {
             }
         })
     }
+    findAll() {
+        return this.prismaService.user.findMany()
+    }
     findByEmail(email: string) {
         return this.prismaService.user.findUnique({
             where: {
