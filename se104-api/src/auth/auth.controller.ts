@@ -12,7 +12,10 @@ export class AuthController {
         if (user) {
             const isValidPassword = await this.userService.comparePassword(password, user.password)
             if (isValidPassword) {
-                return "Login Success"
+                return {
+                    message: "Login Success",
+                    data: user
+                }
             }
         }
         throw new UnauthorizedException("Invalid Email/Password !")
