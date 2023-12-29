@@ -66,6 +66,11 @@ export class OrderService {
         userId
       },
       include: {
+        user: {
+          select: {
+            name: true
+          }
+        },
         billDetail: {
           include: {
             product: {
@@ -104,7 +109,7 @@ export class OrderService {
     const arrayStatus: string[] = Object.values(Status)
     const isValidStatus = arrayStatus.find(s => s === status)
     if (!isValidStatus) {
-      throw new BadRequestException(Status must be in [${arrayStatus}])
+      throw new BadRequestException("Status must be in [${arrayStatus}]")
     }
     
     return this.prismaService.bill.update({
@@ -115,6 +120,6 @@ export class OrderService {
   }
   
   remove(id: number) {
-    return This action removes a #${id} order;
+    return "This action removes a #${id} order";
   }
 }
