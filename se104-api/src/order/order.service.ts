@@ -1,111 +1,68 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { UserOrder } from './order.interface';
 import { PrismaService } from 'src/prisma.service';
-import { ProductQueryString } from './product.interface';
+import { Status } from '@prisma/client';
 
 @Injectable()
-export class ProductService {
+export class OrderService {
   constructor(private prismaService: PrismaService) { }
-  async create(createProductDto: CreateProductDto) {
-    const isExistFactory = await this.prismaService.factory.findUnique({
-      where: {
-        id: createProductDto.factoryId
+  async create(userOrder: UserOrder) {
+    const { userId, productPrice, deliveryPrice, detail } = userOrder
+    if (!userOrder.address || !userOrder.phoneNumber) {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          id: userId
+        }
+      })
+      if (!userOrder.address) {
+        userOrder.address = user.address
+      }
+      if (!userOrder.phoneNumber) {
+        userOrder.phoneNumber = user.phoneNumber
+      }
+    }
+
+    const totalPrice = productPrice + deliveryPrice
+    const order = await this.prismaService.bill.create({
+      data: {
+        userId,
+        productPrice,
+        deliveryPrice,
+        totalPrice,
+        address: userOrder.address,
+        phoneNumber: userOrder.phoneNumber,
+        status: "PENDING",
+        deliveryId: userOrder.deliveryId,
+        deliveryVoucherId: userOrder.deliveryVoucherId ? userOrder.deliveryVoucherId : undefined
+
       }
     })
-    if (!isExistFactory) {
-      throw new BadRequestException("Invalid factoryId")
-    }
-    const isExistShop = await this.prismaService.shop.findUnique({
+    await Promise.all(detail.map(async detailBill => {
+      await this.prismaService.billDetail.create({
+        data: {
+          billId: order.id,
+          productId: detailBill.productId,
+          price: detailBill.price,
+          quantity: detailBill.quantity,
+          shopVoucherId: detailBill.shopVoucherId ? detailBill.shopVoucherId : undefined
+        }
+      })
+      const product = await this.prismaService.product.findUnique({where: {
+        id:detailBill.productId,
+      }})
+    await this.prismaService.product.update({where: {
+      id:detailBill.productId
+    },data: {
+      quantity: product.quantity-detailBill.quantity
+    })
+    }))
+    return "Order Success!"
+  }
+  getByUser(userId: number) {
+    return this.prismaService.bill.findMany({
       where: {
-        id: createProductDto.shopId
+        userId
       }
     })
-    if (!isExistShop) {
-      throw new BadRequestException("Invalid shopId")
-    }
-    const isExistType = await this.prismaService.typeProduct.findUnique({
-      where: {
-        id: createProductDto.typeId
-      }
-    })
-    if (!isExistType) {
-      throw new BadRequestException("Invalid typeId")
-    }
-    const isExistName = await this.prismaService.product.findFirst({
-      where: {
-        name: createProductDto.name
-      }
-    })
-    if (isExistName && isExistName.shopId === createProductDto.shopId) {
-      throw new BadRequestException("Product is exist in this shop")
-    }
-    return this.prismaService.product.create({ data: createProductDto })
-  }
-  async findAllProduct(q: ProductQueryString) {
-    if (!q.sort) {
-      q.sort = '0'
-    }
-
-    return this.prismaService.product.findMany({
-      where: {
-        name: {
-          contains: q.name ? q.name : ''
-        },
-        price: {
-          lte: q.price ? +q.price : undefined
-        },
-        quantity: {
-          gte: q.quantity ? +q.quantity : 0
-        },
-        typeId: q.typeId ? +q.typeId : undefined,
-
-      },
-      orderBy: {
-        createdAt: +q.sort === 0 ? 'desc' : 'asc'
-      }
-    });
-  }
-  async findAll(q: ProductQueryString, shopId:number) {
-    if (!q.sort) {
-      q.sort = '0'
-    }
-
-    return this.prismaService.product.findMany({
-      where: {
-        shopId,
-        name: {
-          contains: q.name ? q.name : ''
-        },
-        price: {
-          lte: q.price ? +q.price : undefined
-        },
-        quantity: {
-          gte: q.quantity ? +q.quantity : 0
-        },
-        typeId: q.typeId ? +q.typeId : undefined,
-
-      },
-      orderBy: {
-        createdAt: +q.sort === 0 ? 'desc' : 'asc'
-      }
-    });
-  }
-
-  findOne(id: number) {
-    return this.prismaService.product.findUnique({ where: { id } });
-  }
-
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return this.prismaService.product.update({
-      where: {
-        id
-      },
-      data: updateProductDto
-    });
-  }
-
-  remove(id: number) {
-    return this.prismaService.product.delete({ where: { id } });
-  }
-}
