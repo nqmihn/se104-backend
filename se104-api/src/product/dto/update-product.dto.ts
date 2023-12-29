@@ -11,4 +11,7 @@ export class UpdateProductDto {
     @Min(1, { message: "Quantity must be greater than 0" })
     quantity: number
     description: string
+
+    @IsOptional()
+    image:string
 }
