@@ -24,7 +24,7 @@ export class ProductService {
     if (!isExistShop) {
       throw new BadRequestException("Invalid shopId")
     }
-    const isExistType = await this.prismaService.shop.findUnique({
+    const isExistType = await this.prismaService.typeProduct.findUnique({
       where: {
         id: createProductDto.typeId
       }
