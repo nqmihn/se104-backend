@@ -49,6 +49,14 @@ export class OrderService {
           shopVoucherId: detailBill.shopVoucherId ? detailBill.shopVoucherId : undefined
         }
       })
+      const product = await this.prismaService.product.findUnique({where: {
+        id:detailBill.productId,
+      }})
+      await this.prismaService.product.updateOne({where: {
+        id: detailBill.productId,
+      },{
+        quantity: product.quantity -  detailBill.quantity
+      }})
     }))
     return "Order Success!"
   }
