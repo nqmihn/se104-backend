@@ -42,7 +42,30 @@ export class ProductService {
     }
     return this.prismaService.product.create({ data: createProductDto })
   }
+  async findAllProduct(q: ProductQueryString) {
+    if (!q.sort) {
+      q.sort = '0'
+    }
 
+    return this.prismaService.product.findMany({
+      where: {
+        name: {
+          contains: q.name ? q.name : ''
+        },
+        price: {
+          lte: q.price ? +q.price : undefined
+        },
+        quantity: {
+          gte: q.quantity ? +q.quantity : 0
+        },
+        typeId: q.typeId ? +q.typeId : undefined,
+
+      },
+      orderBy: {
+        createdAt: +q.sort === 0 ? 'desc' : 'asc'
+      }
+    });
+  }
   async findAll(q: ProductQueryString, shopId:number) {
     if (!q.sort) {
       q.sort = '0'
