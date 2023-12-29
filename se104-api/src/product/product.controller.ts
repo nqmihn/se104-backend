@@ -20,8 +20,8 @@ export class ProductController {
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.productService.findOne(+id)
+  findByShopId(@Param('id') shopId: string) {
+    return this.productService.findOne(+shopId)
   }
 
   @Put(':id')
