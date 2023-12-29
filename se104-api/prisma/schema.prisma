@@ -68,6 +68,7 @@ model Product {
   name        String
   price       Int
   description String
+  image       String?
   factory     Factory      @relation(fields: [factoryId], references: [id], onDelete: Cascade)
   factoryId   Int
   shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
