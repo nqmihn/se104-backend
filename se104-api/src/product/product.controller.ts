@@ -14,7 +14,7 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
-  @Get()
+  @Post('all')
   findAll(@Query() q: ProductQueryString, @Body('shopId') shopId:string) {
     return this.productService.findAll(q, +shopId);
   }
