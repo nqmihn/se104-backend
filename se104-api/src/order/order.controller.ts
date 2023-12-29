@@ -18,9 +18,9 @@ export class OrderController {
   getBillByUser(@Param('userId') userId: string) {
     return this.orderService.getByUser(+userId)
   }
-  @Get('detail/:billId')
-  getBillDetail(@Param('billId') billId: string) {
-    return this.orderService.getDatail(+billId)
+  @Get('detail/:userId')
+  getBillDetail(@Param('userId') userId: string) {
+    return this.orderService.getDatail(+userId)
   }
   @Get()
   findAll() {
