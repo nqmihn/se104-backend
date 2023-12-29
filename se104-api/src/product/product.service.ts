@@ -43,13 +43,14 @@ export class ProductService {
     return this.prismaService.product.create({ data: createProductDto })
   }
 
-  async findAll(q: ProductQueryString) {
+  async findAll(q: ProductQueryString, shopId:number) {
     if (!q.sort) {
       q.sort = '0'
     }
 
     return this.prismaService.product.findMany({
       where: {
+        shopId,
         name: {
           contains: q.name ? q.name : ''
         },
