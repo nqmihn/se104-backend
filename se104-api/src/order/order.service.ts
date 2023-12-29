@@ -52,11 +52,11 @@ export class OrderService {
       const product = await this.prismaService.product.findUnique({where: {
         id:detailBill.productId,
       }})
-    await this.prismaService.product.update({where: {
-      id:detailBill.productId
-    },data: {
-      quantity: product.quantity-detailBill.quantity
-    })
+     await this.prismaService.product.update({where: {
+       id: detailBill.productId
+     }, data: {
+       quantity: product.quantity - detailBill.quantity
+     }})
     }))
     return "Order Success!"
   }
@@ -66,3 +66,40 @@ export class OrderService {
         userId
       }
     })
+  }
+  getDatail(billId: number) {
+    return this.prismaService.bill.findUnique({
+      where: {
+        id: billId
+      },
+      include: {
+        billDetail: true
+      }
+    })
+  }
+  findAll() {
+    return `This action returns all order`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} order`;
+  }
+
+  async update(id: number, status: string) {
+    const arrayStatus: string[] = Object.values(Status)
+    const isValidStatus = arrayStatus.find(s => s === status)
+    if (!isValidStatus) {
+      throw new BadRequestException(`Status must be in [${arrayStatus}]`)
+    }
+
+    return this.prismaService.bill.update({
+      where: { id }, data: {
+        status: status as Status
+      }
+    })
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} order`;
+  }
+}
