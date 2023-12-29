@@ -23,7 +23,7 @@ export class OrderService {
         userOrder.phoneNumber = user.phoneNumber
       }
     }
-
+    
     const totalPrice = productPrice + deliveryPrice
     const order = await this.prismaService.bill.create({
       data: {
@@ -36,7 +36,7 @@ export class OrderService {
         status: "PENDING",
         deliveryId: userOrder.deliveryId,
         deliveryVoucherId: userOrder.deliveryVoucherId ? userOrder.deliveryVoucherId : undefined
-
+        
       }
     })
     await Promise.all(detail.map(async detailBill => {
@@ -52,11 +52,11 @@ export class OrderService {
       const product = await this.prismaService.product.findUnique({where: {
         id:detailBill.productId,
       }})
-     await this.prismaService.product.update({where: {
-       id: detailBill.productId
-     }, data: {
-       quantity: product.quantity - detailBill.quantity
-     }})
+      await this.prismaService.product.update({where: {
+        id: detailBill.productId
+      }, data: {
+        quantity: product.quantity - detailBill.quantity
+      }})
     }))
     return "Order Success!"
   }
@@ -65,8 +65,20 @@ export class OrderService {
       where: {
         userId
       },
-       include: {
-        billDetail: true
+      include: {
+        billDetail: {
+          include: {
+            product: {
+              include: {
+                shop: {
+                  select: {
+                    name: true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     })
   }
@@ -81,28 +93,28 @@ export class OrderService {
     })
   }
   findAll() {
-    return `This action returns all order`;
+    return This action returns all order;
   }
-
+  
   findOne(id: number) {
-    return `This action returns a #${id} order`;
+    return This action returns a #${id} order;
   }
-
+  
   async update(id: number, status: string) {
     const arrayStatus: string[] = Object.values(Status)
     const isValidStatus = arrayStatus.find(s => s === status)
     if (!isValidStatus) {
-      throw new BadRequestException(`Status must be in [${arrayStatus}]`)
+      throw new BadRequestException(Status must be in [${arrayStatus}])
     }
-
+    
     return this.prismaService.bill.update({
       where: { id }, data: {
         status: status as Status
       }
     })
   }
-
+  
   remove(id: number) {
-    return `This action removes a #${id} order`;
+    return This action removes a #${id} order;
   }
 }
