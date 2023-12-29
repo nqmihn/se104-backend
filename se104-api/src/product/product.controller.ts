@@ -22,6 +22,7 @@ export class ProductController {
   @Get()
   findAllProduct(@Query() q: ProductQueryString) {
     return this.productService.findAllProduct(q);
+  }
   @Get(':id')
   findByShopId(@Param('id') id: string) {
     return this.productService.findOne(+id)
