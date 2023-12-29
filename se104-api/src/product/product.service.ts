@@ -63,6 +63,9 @@ export class ProductService {
       },
       orderBy: {
         createdAt: +q.sort === 0 ? 'desc' : 'asc'
+      },
+      include: {
+        shop: true
       }
     });
   }
@@ -88,6 +91,9 @@ export class ProductService {
       },
       orderBy: {
         createdAt: +q.sort === 0 ? 'desc' : 'asc'
+      },
+      include: {
+        shop: true
       }
     });
   }
