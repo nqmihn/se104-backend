@@ -64,13 +64,16 @@ export class OrderService {
     return this.prismaService.bill.findMany({
       where: {
         userId
+      },
+       include: {
+        billDetail: true
       }
     })
   }
   getDatail(userId: number) {
-    return this.prismaService.bill.find({
+    return this.prismaService.bill.findMany({
       where: {
-        userId: userId
+        userId
       },
       include: {
         billDetail: true
