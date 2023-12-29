@@ -68,8 +68,8 @@ export class ProductService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.product.findUnique({ where: { id } });
+  findOne(shopId: number) {
+    return this.prismaService.product.findMany({ where: { shopId } });
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
