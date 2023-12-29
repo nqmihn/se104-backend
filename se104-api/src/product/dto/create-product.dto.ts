@@ -23,5 +23,6 @@ export class CreateProductDto {
     @IsNotEmpty()
     typeId: number
 
+    image:string
 
 }
