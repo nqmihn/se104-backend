@@ -15,8 +15,8 @@ export class ProductController {
   }
 
   @Get()
-  findAll(@Query() q: ProductQueryString) {
-    return this.productService.findAll(q);
+  findAll(@Query() q: ProductQueryString, @Body('shopId') shopId:string) {
+    return this.productService.findAll(q, +shopId);
   }
 
   @Get(':id')
