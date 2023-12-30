@@ -13,12 +13,12 @@ export class AuthController {
             const isValidPassword = await this.userService.comparePassword(password, user.password)
             if (isValidPassword) {
                 return {
-                    message: "Login Success",
+                    message: "Đăng nhập thành công",
                     data: user
                 }
             }
         }
-        throw new UnauthorizedException("Invalid Email/Password !")
+        throw new UnauthorizedException("Email/mật khẩu đăng nhập không hợp lệ!")
     }
     @Post('register')
     handleRegister(@Body() registerUser: RegisterUserDto) {
