@@ -17,7 +17,7 @@ export class ShopService {
     const today = new Date().getTime()
     const userAge = Math.floor(Math.abs(today - userBirth) / (1000 * 60 * 60 * 24 * 365))
     if (userAge <= 17) {
-      throw new BadRequestException("User must be older than 17 years old to open a shop! ")
+      throw new BadRequestException(`Người dùng phải trên 17 tuổi để có thể mở shop! \nTuổi người dùng hiện tại: ${userAge}`)
     }
     const existShop = await this.prismaService.shop.findUnique({
       where: {
@@ -25,7 +25,7 @@ export class ShopService {
       }
     })
     if (existShop) {
-      throw new BadRequestException("User has opened shop already!")
+      throw new BadRequestException("Người dùng đã mở shop!")
     }
     const existName = await this.prismaService.shop.findUnique({
       where: {
@@ -33,11 +33,11 @@ export class ShopService {
       }
     })
     if (existName) {
-      throw new BadRequestException("Name has been used")
+      throw new BadRequestException("Tên này đã được sử dụng")
     }
-    await this.prismaService.shop.user({
+    await this.prismaService.user.update({
       where: {
-        userId:+userId
+        id:+userId
       }, data: {
         role: "SELLER"
       }
@@ -77,7 +77,7 @@ export class ShopService {
       })
       if (shop) {
         if (shop.id !== id) {
-          throw new BadRequestException("Name has been used")
+          throw new BadRequestException("Tên này đã được sử dụng")
         }
       }
     }
