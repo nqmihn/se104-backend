@@ -35,6 +35,13 @@ export class ShopService {
     if (existName) {
       throw new BadRequestException("Name has been used")
     }
+    await this.prismaService.shop.user({
+      where: {
+        userId:+userId
+      }, data: {
+        role: "SELLER"
+      }
+    })
     return await this.prismaService.shop.create({
       data: {
         userId: +userId,
