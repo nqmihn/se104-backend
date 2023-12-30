@@ -61,6 +61,11 @@ export class ShopService {
       id
     }});
   }
+  findByUser(userId: number) {
+    return this.prismaService.shop.findUnique({where: {
+      userId
+    }});
+  }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
     const { name } = updateShopDto
