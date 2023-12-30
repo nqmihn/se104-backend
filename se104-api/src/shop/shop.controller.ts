@@ -22,7 +22,7 @@ export class ShopController {
     return this.shopService.findOne(+id)
   }
    @Get('user/:userId')
-  findById(@Param('userId') userId: string) {
+  findByUser(@Param('userId') userId: string) {
     return this.shopService.findByUser(+userId)
   }
 
