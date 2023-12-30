@@ -20,7 +20,7 @@ export class UserService {
             }
         })
         if (isExist) {
-            throw new BadRequestException("Email has been used ! ")
+            throw new BadRequestException("Email đã được sử dụng! ")
         }
         user.password = this.getHashPassword(user.password)
         return await this.prismaService.user.create({ data: user })
@@ -66,7 +66,7 @@ export class UserService {
             }
         })
         if (isExist) {
-            throw new BadRequestException("Email has been used ! ")
+            throw new BadRequestException("Email đã được sử dụng! ")
         }
 
 
