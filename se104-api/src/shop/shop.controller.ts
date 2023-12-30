@@ -21,6 +21,10 @@ export class ShopController {
   findById(@Param('id') id: string) {
     return this.shopService.findOne(+id)
   }
+   @Get('user/:userId')
+  findById(@Param('userId') userId: string) {
+    return this.shopService.findByUser(+userId)
+  }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
