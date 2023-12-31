@@ -67,8 +67,8 @@ model Product {
   id          Int          @id @default(autoincrement())
   name        String
   price       Int
-  description String
-  image       String?
+  description String       @db.Text
+  image       String?      @db.Text
   factory     Factory      @relation(fields: [factoryId], references: [id], onDelete: Cascade)
   factoryId   Int
   shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
