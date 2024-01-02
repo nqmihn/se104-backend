@@ -37,7 +37,7 @@ export class ShopService {
     }
     await this.prismaService.user.update({
       where: {
-        id:+userId
+        id: +userId
       }, data: {
         role: "SELLER"
       }
@@ -57,14 +57,18 @@ export class ShopService {
   }
 
   findOne(id: number) {
-    return this.prismaService.shop.findUnique({where: {
-      id
-    }});
+    return this.prismaService.shop.findUnique({
+      where: {
+        id
+      }
+    });
   }
   findByUser(userId: number) {
-    return this.prismaService.shop.findUnique({where: {
-      userId
-    }});
+    return this.prismaService.shop.findUnique({
+      where: {
+        userId
+      }
+    });
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
@@ -89,7 +93,17 @@ export class ShopService {
     })
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const shop = await this.prismaService.shop.findUnique({ where: { id } })
+    if (shop) {
+      await this.prismaService.user.update({
+        where: {
+          id: shop.userId
+        }, data: {
+          role: "USER"
+        }
+      })
+    }
     return this.prismaService.shop.delete({ where: { id } });
   }
 }

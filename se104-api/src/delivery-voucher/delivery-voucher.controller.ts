@@ -17,6 +17,10 @@ export class DeliveryVoucherController {
   findAll() {
     return this.deliveryVoucherService.findAll();
   }
+  @Get('available')
+  findAllAvailable() {
+    return this.deliveryVoucherService.findAllAvailable();
+  }
   @Get(':id')
   findById(@Param('id') id: string) {
     return this.deliveryVoucherService.findOne(+id)

@@ -1,22 +1,22 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Role } from "@prisma/client";
-import { IsDateString, IsEmail, IsEnum, IsIn, IsNotEmpty, IsOptional } from "class-validator";
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateUserDto {
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Email không được để trống" })
     @IsEmail()
     email: string
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Mật khẩu không được để trống" })
     password: string
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Tên không được để trống" })
     name: string
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Số điện thoại không được để trống" })
     phoneNumber: string
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Ngày sinh không được để trống" })
     @IsDateString()
     birth: Date
 
@@ -24,20 +24,24 @@ export class CreateUserDto {
 
     @IsOptional()
     @IsEnum(Role)
-    @ApiProperty({enum: Role})
+    @ApiProperty({ enum: Role })
     role: Role
 
 }
 
 export class UpdateUserDto {
+
+    @IsOptional()
     name: string
 
+    @IsOptional()
     phoneNumber: string
 
     @IsOptional()
     @IsDateString()
     birth: Date
 
+    @IsOptional()
     address: string;
 
     @IsOptional()

@@ -13,7 +13,7 @@ datasource db {
 enum Role {
   USER
   SELLER
-  SHIPPER
+  ADMIN
 }
 
 model User {
@@ -24,7 +24,7 @@ model User {
   phoneNumber    String
   birth          DateTime?
   address        String?
-  role           Role?            @default(USER)
+  role           Role             @default(USER)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   shop           Shop?
@@ -44,6 +44,7 @@ model Shop {
   userId      Int           @unique
   product     Product[]
   shopVoucher ShopVoucher[]
+  BillDetail  BillDetail[]
 }
 
 model Factory {
@@ -128,9 +129,9 @@ model Bill {
   deliveryPrice     Int
   user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            Int
+  name              String
   address           String
   phoneNumber       String
-  status            Status
   billDetail        BillDetail[]
   DeliveryVoucher   DeliveryVoucher? @relation(fields: [deliveryVoucherId], references: [id])
   deliveryVoucherId Int?
@@ -151,8 +152,11 @@ model BillDetail {
   productId     Int
   ShopVoucher   ShopVoucher? @relation(fields: [shopVoucherId], references: [id])
   shopVoucherId Int?
+  Shop          Shop         @relation(fields: [shopId], references: [id])
+  shopId        Int
   quantity      Int
   price         Int
+  status        Status
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 

@@ -4,14 +4,15 @@ import { IsOptional, Min } from 'class-validator';
 
 export class UpdateProductDto {
     @IsOptional()
-    @Min(1, { message: "Price must be greater than 0" })
+    @Min(1, { message: "Giá phải lớn hơn 0" })
     price: number
 
     @IsOptional()
-    @Min(1, { message: "Quantity must be greater than 0" })
+    @Min(1, { message: "Số lượng phải lớn hơn 0" })
     quantity: number
+
     description: string
 
     @IsOptional()
-    image:string
+    image: string
 }

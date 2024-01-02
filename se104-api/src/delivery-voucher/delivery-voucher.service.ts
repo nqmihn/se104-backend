@@ -21,6 +21,15 @@ export class DeliveryVoucherService {
   findAll() {
     return this.prismaService.deliveryVoucher.findMany();
   }
+  findAllAvailable() {
+    return this.prismaService.deliveryVoucher.findMany({
+      where: {
+        expireIn: {
+          gte: new Date()
+        }
+      }
+    });
+  }
 
   findOne(id: number) {
     return this.prismaService.deliveryVoucher.findUnique({ where: { id } });

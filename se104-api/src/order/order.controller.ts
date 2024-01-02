@@ -20,7 +20,7 @@ export class OrderController {
   }
   @Get('detail/:userId')
   getBillDetail(@Param('userId') userId: string) {
-    return this.orderService.getDatail(+userId)
+    return this.orderService.getDetail(+userId)
   }
   @Get()
   findAll() {
@@ -30,6 +30,10 @@ export class OrderController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id);
+  }
+  @Get('shop/:shopId')
+  findByShopId(@Param('shopId') shopId: string) {
+    return this.orderService.findByShop(+shopId)
   }
 
   @Put(':id')

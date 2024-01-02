@@ -21,7 +21,7 @@ export class ShopController {
   findById(@Param('id') id: string) {
     return this.shopService.findOne(+id)
   }
-   @Get('user/:userId')
+  @Get('user/:userId')
   findByUser(@Param('userId') userId: string) {
     return this.shopService.findByUser(+userId)
   }

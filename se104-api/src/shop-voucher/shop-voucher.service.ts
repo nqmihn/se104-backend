@@ -21,6 +21,15 @@ export class ShopVoucherService {
   findAll() {
     return this.prismaService.shopVoucher.findMany();
   }
+  findAllAvailable() {
+    return this.prismaService.shopVoucher.findMany({
+      where: {
+        expireIn: {
+          gte: new Date()
+        }
+      }
+    });
+  }
 
   findOne(id: number) {
     return this.prismaService.shopVoucher.findUnique({ where: { id } });

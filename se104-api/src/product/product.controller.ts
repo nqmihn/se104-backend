@@ -15,7 +15,7 @@ export class ProductController {
   }
 
   @Post('all')
-  findAll(@Query() q: ProductQueryString, @Body('shopId') shopId:string) {
+  findAll(@Query() q: ProductQueryString, @Body('shopId') shopId: string) {
     return this.productService.findAll(q, +shopId);
   }
 

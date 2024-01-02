@@ -17,6 +17,10 @@ export class ShopVoucherController {
   findAll() {
     return this.shopVoucherService.findAll();
   }
+  @Get('available')
+  findAllAvailable() {
+    return this.shopVoucherService.findAllAvailable();
+  }
 
   @Get(':id')
   findById(@Param('id') id: string) {
