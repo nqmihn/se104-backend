@@ -133,12 +133,12 @@ model Bill {
   address           String
   phoneNumber       String
   billDetail        BillDetail[]
-  DeliveryVoucher   DeliveryVoucher? @relation(fields: [deliveryVoucherId], references: [id])
+  DeliveryVoucher   DeliveryVoucher? @relation(fields: [deliveryVoucherId], references: [id], onDelete: Cascade)
   deliveryVoucherId Int?
   totalPrice        Int
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
-  delivery          Delivery         @relation(fields: [deliveryId], references: [id])
+  delivery          Delivery         @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
   deliveryId        Int
   deliveryDetail    DeliveryDetail?
   refund            Refund[]
@@ -148,11 +148,11 @@ model BillDetail {
   id            Int          @default(autoincrement())
   bill          Bill         @relation(fields: [billId], references: [id], onDelete: Cascade)
   billId        Int
-  product       Product      @relation(fields: [productId], references: [id])
+  product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId     Int
-  ShopVoucher   ShopVoucher? @relation(fields: [shopVoucherId], references: [id])
+  ShopVoucher   ShopVoucher? @relation(fields: [shopVoucherId], references: [id], onDelete: Cascade)
   shopVoucherId Int?
-  Shop          Shop         @relation(fields: [shopId], references: [id])
+  Shop          Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
   shopId        Int
   quantity      Int
   price         Int

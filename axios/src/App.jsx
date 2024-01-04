@@ -9,6 +9,7 @@ import {
   getUserById,
   updateUser,
 } from "./axios/api";
+import axios from "./utils/axios.customize";
 
 function App() {
   const [email, setEmail] = useState("test777@gmail.com");
@@ -20,6 +21,15 @@ function App() {
   const [role, setRole] = useState("SELLER");
   const [id, setId] = useState(1);
   const [listUser, setListUser] = useState([]);
+  const productId = 5;
+  const deleteProduct = async () => {
+    const res = await axios.delete("api/v1/product", {
+      data: {
+        id: productId,
+      },
+    });
+    console.log(res);
+  };
   useEffect(() => {
     fetchListUser();
     console.log(listUser);
@@ -161,6 +171,7 @@ function App() {
       <button onClick={() => handleUpdateUser()}>Update</button>
       <button onClick={() => handleGetUserById()}> Get User By Id</button>
       <button onClick={() => handleDeleteUser()}>Delete User</button>
+      <button onClick={deleteProduct}> Delete Product</button>
     </>
   );
 }
