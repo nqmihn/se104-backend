@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { UserOrder } from './order.interface';
+import { DashboardQuery, UserOrder } from './order.interface';
 import { PrismaService } from 'src/prisma.service';
 import { Status } from '@prisma/client';
 
@@ -147,6 +147,31 @@ export class OrderService {
         status: status as Status
       }
     })
+  }
+  async getOverview(shopId:number,query:DashboardQuery){
+    const orders = await this.findByShop(shopId)
+    let totalQuantity = 0;
+    let totalMoney = 0;
+    orders.map(order => {
+      // date -1 month + 1
+      if (!query.month && !query.year){
+        if (order.status === "COMPLETE"){
+          totalQuantity+= order.quantity
+          totalMoney+= order.quantity * order.price
+        }
+      } else if (!query.month && query.year){
+        if (order.status === "COMPLETE" && order.createdAt.getFullYear() === +query.year){
+          totalQuantity+= order.quantity
+          totalMoney+= order.quantity * order.price
+        }
+      } else {
+        if (order.status === "COMPLETE" && order.createdAt.getFullYear() === +query.year && (order.createdAt.getMonth() +1) === +query.month ){
+          totalQuantity+= order.quantity
+          totalMoney+= order.quantity * order.price
+        }
+      }
+    })
+    return {totalMoney,totalQuantity}
   }
 
   remove(id: number) {

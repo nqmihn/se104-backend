@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { UserOrder } from './order.interface';
+import { DashboardQuery, UserOrder } from './order.interface';
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags("order")
 @Controller('order')
@@ -44,5 +44,9 @@ export class OrderController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
+  }
+  @Get('dashboard/:shopId')
+  getOverview(@Param('shopId') shopId:string, @Query() query:DashboardQuery){
+    return this.orderService.getOverview(+shopId,query)
   }
 }

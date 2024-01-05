@@ -15,3 +15,7 @@ export interface UserOrder {
         price: number
     }[]
 }
+export interface DashboardQuery {
+    month?:string;
+    year?:string;
+}
